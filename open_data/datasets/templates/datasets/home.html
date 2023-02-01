@@ -1,17 +1,17 @@
 {% extends "datasets/base.html" %}
 {% block content %}
-    {% for wniosek in wnioski %}
+    {% for dataset in datasets %}
         <article class="media content-section">
             <div class="media-left">
-                <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
+                <img class="rounded-circle article-img media-object" src="{{ dataset.author.profile.image.url }}" alt="">
             </div>
             <div class="media-body">
                 <div class="article-metadata">
-                    <a class="mr-2" href="#">{{ wniosek.author }}</a>
-                    <small class="text-muted">{{ wniosek.date_post|date:"d-E-Y" }}</small>
+                    <a class="mr-2" href="#">{{ dataset.author }}</a>
+                    <small class="text-muted">{{ dataset.date_post|date:"d-E-Y" }}</small>
                 </div>
-                <h2><a class="article-title" href="#">{{ wniosek.title }}</a></h2>
-                <p class="article-content">{{ wniosek.content }}</p>
+                <h2><a class="article-title" href="#">{{ dataset.title }}</a></h2>
+                <p class="article-content">{{ dataset.content }}</p>
             </div>
         </article>
     {% endfor %}
