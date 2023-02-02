@@ -17,7 +17,7 @@ class OrganisationListView(ListView):
     template_name = 'datasets/home.html'
     ordering = ['title']
 
-
+#todo przerobic create_views wszedzie
 def create_organisation(request):
 
     if request.method == 'POST':  # If the form has been submitted...
