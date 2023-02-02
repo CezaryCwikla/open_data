@@ -34,7 +34,9 @@
                         <!-- Navbar Right Side -->
                         <div class="navbar-nav">
                             {% if user.is_authenticated %}
-                                <a class="nav-item nav-link" href="{% url 'datasets-create' %}">Nowy Wniosek</a>
+                                <a class="nav-item nav-link" href="{% url 'organisation-create' %}">Nowa Organizacja</a>
+                                <a class="nav-item nav-link" href="{% url 'category-create' %}">Nowa Kategoria</a>
+                                <a class="nav-item nav-link" href="{% url 'datasets-create' %}">Nowy Zbiór</a>
                                 <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
                                 <a class="nav-item nav-link" href="{% url 'logout' %}">Wyloguj się</a>
                             {% else %}

@@ -1,0 +1,13 @@
+{% extends "datasets/base.html" %}
+{% block content %}
+    {% for org in organisations %}
+        <article class="media content-section">
+            <div class="media-left">
+                <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
+            </div>
+            <div class="media-body">
+                <h2><a class="article-title" href="#">{{ org.title }}</a></h2>
+            </div>
+        </article>
+    {% endfor %}
+{% endblock content %}

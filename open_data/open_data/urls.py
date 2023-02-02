@@ -20,10 +20,13 @@ from django.conf.urls.static import static
 from django.conf import settings
 from users import views as user_views
 
+
+app_name = 'datasets'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('datasets/', include('datasets.urls')),
     path('category/', include('category.urls')),
+    path('organisation/', include('organisation.urls')),
     path('', include('core.urls')),
     path('register/', user_views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
