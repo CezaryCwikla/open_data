@@ -5,7 +5,7 @@ from taggit.managers import TaggableManager
 from organisation.models import Organisation
 from category.models import Category
 from resource.models import Resource
-
+from django.shortcuts import reverse
 
 choices = [('Prywatne', 'Prywatne'),
            ('Publiczne', 'Publiczne')]
@@ -25,3 +25,6 @@ class Dataset(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('datasets-detail', kwargs={'pk': self.pk})

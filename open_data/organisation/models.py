@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from category.models import Category
+from django.shortcuts import reverse
 
 
 class Organisation(models.Model):
@@ -14,3 +15,6 @@ class Organisation(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('organisation-detail', kwargs={'pk': self.pk})

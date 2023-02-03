@@ -1,0 +1,25 @@
+{% extends "datasets/base.html" %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-left">
+            <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
+        </div>
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">{{ dataset.author }}</a>
+                {% load i18n %}
+                {% language 'pl' %}
+                <small class="text-muted">{{ dataset.date_post|date:"d-E-Y" }}</small>
+                {% endlanguage %}
+                {% if user or user.is_superuser %}
+                    <div>
+                        <a class="btn btn-secondary btn-sm my-1 " href="{% url 'datasets-update' dataset.id %}"> Aktualizuj plik</a>
+                        <a class="btn btn-danger btn-sm my-1 " href="{% url 'datasets-delete' dataset.id %}"> Usuń plik</a>
+                    </div>
+                {% endif %}
+            </div>
+            <h2 class="article-title">{{ dataset.title }}</h2>
+            <p class="article-content">{{ dataset.description }}</p>
+        </div>
+    </article>
+{% endblock content %}

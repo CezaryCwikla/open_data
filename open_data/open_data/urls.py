@@ -25,8 +25,9 @@ app_name = 'datasets'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('datasets/', include('datasets.urls')),
-    path('category/', include('category.urls')),
+    path('resource/', include('resource.urls')),
     path('organisation/', include('organisation.urls')),
+    path('category/', include('category.urls')),
     path('', include('core.urls')),
     path('register/', user_views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),

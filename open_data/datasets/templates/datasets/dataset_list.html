@@ -10,7 +10,7 @@
                     <a class="mr-2" href="#">{{ dataset.author }}</a>
                     <small class="text-muted">{{ dataset.date_post|date:"d-E-Y" }}</small>
                 </div>
-                <h2><a class="article-title" href="#">{{ dataset.title }}</a></h2>
+                <h2><a class="article-title" href="{% url 'datasets-detail' dataset.id %}">{{ dataset.title }}</a></h2>
                 <p class="article-content">{{ dataset.content }}</p>
             </div>
         </article>

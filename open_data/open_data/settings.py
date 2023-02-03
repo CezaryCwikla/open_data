@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'category.apps.CategoryConfig',
-    'organisation.apps.OrganisationConfig',
     'resource.apps.ResourceConfig',
+    'organisation.apps.OrganisationConfig',
     'users.apps.UsersConfig',
     'datasets.apps.DatasetsConfig',
     'core.apps.CoreConfig',

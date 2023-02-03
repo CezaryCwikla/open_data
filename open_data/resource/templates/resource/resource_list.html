@@ -1,12 +1,12 @@
 {% extends "datasets/base.html" %}
 {% block content %}
-    {% for category in categories %}
+    {% for resource in resources %}
         <article class="media content-section">
             <div class="media-left">
                 <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
             </div>
             <div class="media-body">
-                <h2><a class="article-title" href="#">{{ category.title }}</a></h2>
+                <h2><a class="article-title" href="{% url 'resource-detail' resource.id %}">{{ resource.title }}</a></h2>
             </div>
         </article>
     {% endfor %}
