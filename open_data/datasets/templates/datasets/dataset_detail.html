@@ -1,25 +1,60 @@
 {% extends "datasets/base.html" %}
 {% block content %}
-    <article class="media content-section">
-        <div class="media-left">
-            <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
-        </div>
-        <div class="media-body">
-            <div class="article-metadata">
-                <a class="mr-2" href="#">{{ dataset.author }}</a>
-                {% load i18n %}
-                {% language 'pl' %}
-                <small class="text-muted">{{ dataset.date_post|date:"d-E-Y" }}</small>
-                {% endlanguage %}
-                {% if user or user.is_superuser %}
-                    <div>
-                        <a class="btn btn-secondary btn-sm my-1 " href="{% url 'datasets-update' dataset.id %}"> Aktualizuj plik</a>
-                        <a class="btn btn-danger btn-sm my-1 " href="{% url 'datasets-delete' dataset.id %}"> Usuń plik</a>
-                    </div>
-                {% endif %}
+<article class="media content-section">
+
+    <div class="media-body">
+        <div class="article-metadata">
+            {% load i18n %}
+            {% language 'pl' %}
+            <div class="row flex-fill">
+                <div class="col-md-6">
+                    <small class="text-muted">Utworzono: {{ dataset.date_posted|date:"d-E-Y" }}</small>
+                </div>
+                <div class="col-md-6 text-end">
+                    <small class="text-muted">Zmodyfikowano: {{ dataset.last_updated|date:"d-E-Y" }}</small>
+                </div>
             </div>
-            <h2 class="article-title">{{ dataset.title }}</h2>
-            <p class="article-content">{{ dataset.description }}</p>
+            {% endlanguage %}
+            {% if user or user.is_superuser %}
+            <div>
+                <a class="btn btn-secondary btn-sm my-1" href="{% url 'datasets-update' dataset.id %}"> Aktualizuj
+                    plik</a>
+                <a class="btn btn-danger btn-sm my-1 float-end" href="{% url 'datasets-delete' dataset.id %}"> Usuń plik</a>
+            </div>
+            {% endif %}
         </div>
-    </article>
+        <h2 class="article-title">{{ dataset.title }}</h2>
+        <h3 class="article-title">{{ dataset.description }}</h3>
+        <div class="container">
+            <div class="text-center mb-5">
+                <h3>Zasoby</h3>
+            </div>
+            {% for resource in dataset.resources.all %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex flex-column flex-lg-row">
+                            <span class="avatar avatar-text rounded-3 me-4 bg-warning mb-2">BE</span>
+                            <div class="row flex-fill">
+                                <div class="col-sm-5">
+                                    <h4 class="h5">{{resource.title}}</h4>
+                                    <span class="badge bg-secondary">US</span> <span
+                                        class="badge bg-success">$90K - $180K</span>
+                                </div>
+                                <div class="col-sm-4 py-2">
+                                    {% for tag in dataset.tags.all %}
+                                    <span class="badge bg-secondary">{{tag}}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-sm-3 text-lg-end pt-2">
+                                    <a href="{% url 'resource-detail' resource.id %}" class="btn btn-primary stretched-link">Podgląd</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</article>
 {% endblock content %}

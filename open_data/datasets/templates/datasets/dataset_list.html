@@ -1,40 +1,51 @@
 {% extends "datasets/base.html" %}
 {% block content %}
+<div class="container">
+    <div class="text-center m-5">
+        <h3>Zbiory danych</h3>
+    </div>
     {% for dataset in datasets %}
-        <article class="media content-section">
-            <div class="media-left">
-                <img class="rounded-circle article-img media-object" src="{{ dataset.author.profile.image.url }}" alt="">
-            </div>
-            <div class="media-body">
-                <div class="article-metadata">
-                    <a class="mr-2" href="#">{{ dataset.author }}</a>
-                    <small class="text-muted">{{ dataset.date_post|date:"d-E-Y" }}</small>
+        <div class="list-group">
+            <a href="{% url 'datasets-detail' dataset.id %}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="card my-3">
+                    <div class="card-body">
+                        <div class="d-flex flex-column flex-lg-row">
+                            <i class="me-4 mb-2 mt-3 fas fa-lg fa-database"></i>
+                            <div class="col-sm-5">
+                                <h4 class="h5">{{ dataset.title }}</h4>
+                                <h5 class="h6">{{ dataset.description }}</h5>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-                <h2><a class="article-title" href="{% url 'datasets-detail' dataset.id %}">{{ dataset.title }}</a></h2>
-                <p class="article-content">{{ dataset.content }}</p>
-            </div>
-        </article>
+
+            </a>
+        </div>
     {% endfor %}
-    {% if is_paginated %}
+</div>
+{% if is_paginated %}
 
-        {% if page_obj.has_previous %}
-            <a class="btn btn-outline-info mb-4" href="?page=1">Pierwsza</a>
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"> Poprzednia </a>
+{% if page_obj.has_previous %}
+<a class="btn btn-outline-info mb-4" href="?page=1">Pierwsza</a>
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"> Poprzednia </a>
 
-        {% endif %}
+{% endif %}
 
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-            {% endif %}
-        {% endfor %}
+{% for num in page_obj.paginator.page_range %}
+{% if page_obj.number == num %}
+<a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+{% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+<a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+{% endif %}
+{% endfor %}
 
-        {% if page_obj.has_next %}
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}"> Następna </a>
-            <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}"> Ostatnia </a>
-        {% endif %}
+{% if page_obj.has_next %}
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}"> Następna </a>
+<a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}"> Ostatnia </a>
+{% endif %}
 
-    {% endif %}
+{% endif %}
+
+
 {% endblock content %}

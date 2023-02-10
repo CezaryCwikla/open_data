@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Dataset
+from resource.models import Resource
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -20,6 +21,13 @@ class DatasetsListView(ListView):
     ordering = ['-date_posted']
     paginate_by = 5
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.is_authenticated:
+            return qs
+        else:
+            return qs.filter(availability='Publiczne')
+
 
 class DatasetsCreateView(LoginRequiredMixin, CreateView):
     model = Dataset
@@ -39,6 +47,8 @@ class DatasetsCreateView(LoginRequiredMixin, CreateView):
 
 class DatasetsDetailView(DetailView):
     model = Dataset
+
+
 
 
 class DatasetsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
