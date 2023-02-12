@@ -23,7 +23,7 @@ class ResourceListView(ListView):
 
 class ResourceDetailView(DetailView):
     model = Resource
-
+    #todo _przerobic
 
 class ResourceCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Resource
