@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from taggit.managers import TaggableManager
 from organisation.models import Organisation
 from category.models import Category
-from resource.models import Resource
 from django.shortcuts import reverse
 
 choices = [('Prywatne', 'Prywatne'),
@@ -18,10 +17,10 @@ class Dataset(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True) #todo test SET NULL CZY DZIALA
     availability = models.CharField(max_length=20, choices=choices, default='Prywatne')
+    frequency = models.IntegerField(default=0)
     tags = TaggableManager()
     organisation = models.ForeignKey(Organisation, on_delete=models.SET_NULL, null=True) #todo test SET NULL CZY DZIALA
     categories = models.ManyToManyField(Category)
-    resources = models.ManyToManyField(Resource)
 
     def __str__(self):
         return self.title

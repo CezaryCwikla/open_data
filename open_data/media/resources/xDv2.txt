@@ -1,0 +1,91 @@
+%matplotlib inline
+import numpy as np                #import numpy bo nam się przyda do matmy   
+import matplotlib.pyplot as plt      #import biblioteki do wyświetlania wykresów
+import random                        #import biblioteki do generowania liczb losowych
+
+from keras.datasets import mnist     #z bibliotki keras do ML importujemy funkcję mnist
+from keras.models import Sequential  #z bibliotki keras do ML importujemy funkcję Sequential
+
+from keras.layers.core import Dense, Dropout, Activation #z bibliotki keras do ML importujemy funkcję ense, Dropout, Activation
+from keras.utils import np_utils    #z bibliotki keras do ML importujemy np_utils                     
+!wget bigbang.prz.edu.pl/pomiary_stopy/mapy_features.npy  #to nie jest komenda z pythona, stąd ten wykrzyknik, pobieramy cechy zbioru
+!wget bigbang.prz.edu.pl/pomiary_stopy/mapy_labels.npy #to nie jest komenda z pythona, stąd ten wykrzyknik, pobieramy labele zbioru
+mapy_features=np.load('mapy_features.npy') 	#za pomocą biblioteki numpy i funkcji load ładujemy pobrane cechy do zmiennej mapy_features
+labels=np.load('mapy_labels.npy')			#za pomocą biblioteki numpy i funkcji load ładujemy pobrane labels do zmiennej labels
+print(mapy_features.shape) 			#wyswietlamy rozmiar macierzy mapy_features
+print(labels.shape)					#wyswietlamy rozmiar macierzy labels
+mapy_features_flattened = np.reshape(mapy_features, (6400,242)) #zmieniamy wymiary macierzy na 6400 wierszy x 242 kolumny
+labels = labels.reshape(242,1)	#zmieniamy wymiary macierzy na 242 wierszy x 1 kolumna
+#sprawdzenie czy dziala
+plt.imshow(np.reshape(mapy_features_flattened[:,0], (80,80))) #wyswietlenie obrazka na podstawie zmiennej mapy_features_flattened, mało istotne, informacyjnie lub do porównania z wynikiem ML
+from sklearn.model_selection import train_test_split #importujemy funkcję do podziału zbioru na zbiiór uczący i zbiór testowy 
+ 
+X_train_val, X_test, y_train_val, y_test = train_test_split(mapy_features_flattened.T, labels, test_size=0.1, random_state=42)  #no i dzielimy teraz macierze cech i labels na zbiory uczące i testowe w skali 90/10 (90% to uczace 10% to testowe, najoptymalniejsze jest 80/20, ale to takie info tylko). X to ta macierz cech, Y to labels. Ogólnie X to jest to co będziemy znać, natomiast Y to wynik, który ma się sztuczna sieć neuronowa nauczyć podować. Tutaj narazie Y jest znane, po to by się na tym nauczyła. Random state jest po to by otrzymywać cały czas taki sam podział 
+X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=0.1, random_state=42) #tu nie wiemm po co ponowny podział, tym razem następuje podział zbioru uczącego, znowu na zasadzie 90%/10%
+X_train[num].shape 		#po podziale sprawdzamy shape, czyli ile wierszy i ile kolumn ma macierz
+plt.rcParams['figure.figsize'] = (9,9) #tutaj ustalamy rozmiar obrazka, który otrzymamy z plt.subplot, to jest jakby wstępna konfiguracja zanim go wywołamy
+
+for i in range(9):					#pętla wykona się 9 razy, i będzie miało wartości od 0  do 9, chyba będzie 9 obrazków
+    plt.subplot(3,3,i+1)			# obrazek (wykres) dla każdego wywołania pętli, x = 3, y=3 idk why
+    num = random.randint(0, len(X_train)) #wygeneruj losową liczbę zakresu od 0 do liczby elementów w X_train
+
+    rozmiar_mapy = np.sqrt(X_train[num].shape[0]).astype('int')		#do zmiennej rozmiar mapy przypisuje się pierwiastek z wylosowanego elementu listy X_train
+    obrazek = np.reshape(X_train[num], (rozmiar_mapy,rozmiar_mapy)) # no i tutaj ten obrazek będzie mial wymiary o wartości tej liczby, którą spierwiastkowano, ale po co ni wiem, może gość sobie coś wizaulizuje, jakieś wylosowane wartości z macierzy testowej? reshape tutaj zmienia rozmiar tego elementu X_train[num], na własnie macierz o wymiarach: rozmiar x rozmiar
+    
+    plt.imshow(obrazek, cmap='gray', interpolation='none')		#no i tutaj następuje wyświetlenie wygenerowanego obrazka, poobserwuj sobie zmiennej, zmienna obrazek, to jest właśnie tamten element, którego rozmiary przerobiono 
+    plt.title("Class {}".format(y_train[num]))					#do obrazka przypisz tytuł: Class ... (chodzi o to, że teraz z y_train pobierany jest element o indexie num, który jest przecież losowy, ale to jest ten sam index, co w X_train, czyli to Y jest dla tych samych cech, czyli własnie dla tego labela, wyświetlane sa cechy? coś w tym stylu
+    #ogólnie do powyższego przydałby się plik ten, który on pobiera przez !wget ale mi link nie działa.
+	
+plt.tight_layout() #???
+X_train = X_train.astype('float32')   # zmiana zmiennych z typu object, na float32 by można było na tym wykonywać obliczenia, bo wczesniej to była zmienna typu object, czyli funkcja nie wiedziała jak to interpretować 
+X_val = X_val.astype('float32')   #to samo
+X_test = X_test.astype('float32') #to samo tylko dla innnej macierzy
+
+X_train /= 255      #dzieli wszystkie wartości macierzy przez 255, zazwyczaj przydatne do tworzenia odcieniu szarości na mapach                  
+X_val /= 255		 #dzieli wszystkie wartości macierzy przez 255, zazwyczaj przydatne do tworzenia odcieniu szarości na mapach	
+X_test /= 255		 #dzieli wszystkie wartości macierzy przez 255, zazwyczaj przydatne do tworzenia odcieniu szarości na mapach
+
+print("Training matrix shape", X_train.shape)		#wyświetlenie wymiarów macierzy zbioru uczącego
+print("Testing matrix shape", X_test.shape)			#wyświetlenie wymiarów macierzy zbioru testowego	
+nb_classes = 2 # number of unique maps #?
+ 
+Y_train = np_utils.to_categorical(y_train, nb_classes) #Konwertuje wektor klasy (liczby całkowite) na binarną macierz klas.
+Y_val = np_utils.to_categorical(y_val, nb_classes) 		#Konwertuje wektor klasy (liczby całkowite) na binarną macierz klas.
+Y_test = np_utils.to_categorical(y_test, nb_classes)	#Konwertuje wektor klasy (liczby całkowite) na binarną macierz klas.	
+
+
+model = Sequential() # utworzenie obiektu modelu sekwencyjnego, który jest liniowym stosem warstw. Ogólnie to jest model, na którym teraz będziesz uczyć
+
+model.add(Dense(32, input_shape=(6400,))) #(6400,) is not a typo -- that represents a 6400 length vector! #chodzi o to, że to jest wektor, a nie macierz), tutaj podał głebokość
+#ogólnie dodatejemy tutaj wartswę zwaną głęboką do modelu i wskazujemy rozmiar naszych dannych wejściowych, tutaj bedą te cechy. 
+model.add(Activation('relu')) #funkcja aktywacji
+model.add(Dropout(0.2)) #Dropout to technika, w której losowo wybrane neurony są ignorowane podczas treningu
+model.add(Dense(32)) #kolejna warstwa
+model.add(Activation('relu')) #kolejna funkcja aktywacji
+model.add(Dropout(0.2)) #itd
+model.add(Dense(2)) #itd
+model.add(Activation('softmax')) #tutaj inna funkcja aktywacji
+model.summary()
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy']) #Konfiguruje model do trenowania. Wskazany jest optimizer, zazwycaj to jest adam, metryka według której będziemy badać wydajność modelu, w tym wypadku to acc
+!pip install livelossplot #tu doinstalowujesz biblioteki, ale to niewaznne, bo to nie jest w kodzie, to jest doinstalowanie do środowiska byś miał skąd te paczkkę wziąć ;P Coś jak pobranie pliku czy gry, nie odpalisz bez pobrania najpierw na kompa
+from livelossplot import PlotLossesKeras #importujesz biblioteke do wykresów live (chodzi o to, że podzcas uczenia bedziesz widzial jak sie uczy na wykresie pewnie :))
+model.fit(X_train, Y_train,
+          batch_size=4, 
+          epochs=50,
+          validation_data=(X_val, Y_val),
+          callbacks=[PlotLossesKeras()],
+          verbose=0) ########### NO I TUTAJ DZIEJE SIĘ WSZYSTKO MOMENT UCZENIA: poddajesz dane wejśćiowe i wyjściowe na których ma się uczyć, ile epoch, dane na których sobie zrobi test (validation_data - Dane, na podstawie których można ocenić utratę i wszelkie metryki modelu na koniec każdej epoki. Model nie będzie trenowany na tych danych.). no i tutaj ten objekt model się uczy
+score = model.evaluate(X_test, Y_test) #sprawdzasz wydajnosc modelu na podstawie danych testowych
+print('Test score:', score[0]) #wyswietl straty modelu, im mniejsza strata tym lepszy model
+print('Test accuracy:', score[1]) #wyswietl wydajnosc modelu (accuarcy - czyli jego precyzyjność w przewidywaniu wyjścia)
+predicted_classes=model.predict(X_test) #no i tutaj robisz sobie testową predykcję na danych testowych
+classes_x=np.argmax(predicted_classes,axis=1) #zwraca indeksy największych wartości otrzymanych w predykcji
+
+correct_indices = np.nonzero(predicted_classes == y_test)[0] #no i tutaj porównujesz dane z predykcji z prawdziwymi danymi wynikowymi i otrzymujesz które dane dobrze zgadł
+
+incorrect_indices = np.nonzero(predicted_classes != y_test)[0] #otrzymujesz które dane ŹLE zgadł
+from sklearn.metrics import confusion_matrix #importujesz funkcję do generowania macierzy błędów/nieporozoumień/zamieszania
+
+confusion_matrix(y_test, classes_x) # i tutaj ją właśnie utworzono 
+
+# MACIERZ BŁEDÓW: est specyficznym układem tabeli, który umożliwia wizualizację działania algorytmu, zwykle nadzorowanego uczenia się (w uczenie nienadzorowane jest zwykle nazywane macierzą dopasowującą ). Każdy wiersz macierzy reprezentuje instancje w rzeczywistej klasie, podczas gdy każda kolumna reprezentuje instancje w klasie przewidywanej lub odwrotnie – oba warianty można znaleźć w literaturze. [11]Nazwa wynika z faktu, że ułatwia sprawdzenie, czy system nie myli dwóch klas (tj. często niewłaściwie oznacza jedną z drugą).

@@ -34,10 +34,10 @@ class DatasetsCreateView(LoginRequiredMixin, CreateView):
     fields = ['title',
               'description',
               'availability',
+              'frequency',
               'tags',
               'organisation',
               'categories',
-              'resources',
               ]
 
     def form_valid(self, form):
@@ -48,7 +48,10 @@ class DatasetsCreateView(LoginRequiredMixin, CreateView):
 class DatasetsDetailView(DetailView):
     model = Dataset
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resources'] = Resource.objects.filter(dataset=self.object)
+        return context
 
 
 class DatasetsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

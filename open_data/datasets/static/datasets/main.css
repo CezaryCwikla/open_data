@@ -82,3 +82,22 @@ a.article-title:hover {
 .account-heading {
   font-size: 2.5rem;
 }
+
+.btn-custom {
+  background: #fd7e14;
+  --bs-btn-color: #fff;
+  }
+
+.btn-custom:hover {
+  background: #343a40;
+  color: #fff !important;
+  }
+
+.text-custom {
+  color: #fd7e14;
+}
+
+.bg-custom {
+  background: #fd7e14;
+  color: #f8f9fa;
+}

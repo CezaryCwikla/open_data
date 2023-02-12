@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .models import Resource
+from datasets.models import Dataset
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -24,7 +25,7 @@ class ResourceDetailView(DetailView):
     model = Resource
 
 
-class ResourceCreateView(LoginRequiredMixin, CreateView):
+class ResourceCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Resource
     fields = ['title',
               'description',
@@ -34,12 +35,19 @@ class ResourceCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        form.instance.dataset = Dataset.objects.get(pk=self.kwargs['pk'])
         return super().form_valid(form)
 
     def form_invalid(self, form):
         context = self.get_context_data(form=form)
         context.update({"my_message": "Soemthing went wrong"})
         return self.render_to_response(context)
+
+    def test_func(self):
+        dataset = Dataset.objects.get(pk=self.kwargs['pk'])
+        if self.request.user == dataset.author or self.request.user.is_superuser:
+            return True
+        return False
 
 
 class ResourceUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -66,7 +74,7 @@ class ResourceDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('resource-home')
 
     def test_func(self):
-        wniosek = self.get_object()
-        if self.request.user == wniosek.author or self.request.user.is_superuser:
+        resource = self.get_object()
+        if self.request.user == resource.author or self.request.user.is_superuser:
             return True
         return False

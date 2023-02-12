@@ -2,59 +2,81 @@
 {% block content %}
 <article class="media content-section">
 
-    <div class="media-body">
-        <div class="article-metadata">
+    <div class=" media-body">
+        <div class="container article-metadata pb-4 pt-2">
+            {% if user == dataset.author or user.is_superuser %}
+                <a class="btn btn-secondary btn-sm my-1" href="{% url 'datasets-update' dataset.id %}"> Aktualizuj
+                    plik</a>
+                <a class="btn btn-danger btn-sm my-1 float-end" href="{% url 'datasets-delete' dataset.id %}"> Usuń plik</a>
+            {% endif %}
+
+        </div>
+        <div class="container article-metadata pb-3 pt-2 ">
             {% load i18n %}
             {% language 'pl' %}
             <div class="row flex-fill">
                 <div class="col-md-6">
-                    <small class="text-muted">Utworzono: {{ dataset.date_posted|date:"d-E-Y" }}</small>
+                    <small class="text-muted"> <b>Utworzono: {{ dataset.date_posted|date:"d-E-Y" }}</b></small>
                 </div>
                 <div class="col-md-6 text-end">
-                    <small class="text-muted">Zmodyfikowano: {{ dataset.last_updated|date:"d-E-Y" }}</small>
+                    <small class="text-muted"> <b>Zmodyfikowano: {{ dataset.last_updated|date:"d-E-Y" }}</b></small>
                 </div>
             </div>
             {% endlanguage %}
-            {% if user or user.is_superuser %}
-            <div>
-                <a class="btn btn-secondary btn-sm my-1" href="{% url 'datasets-update' dataset.id %}"> Aktualizuj
-                    plik</a>
-                <a class="btn btn-danger btn-sm my-1 float-end" href="{% url 'datasets-delete' dataset.id %}"> Usuń plik</a>
-            </div>
-            {% endif %}
         </div>
-        <h2 class="article-title">{{ dataset.title }}</h2>
-        <h3 class="article-title">{{ dataset.description }}</h3>
-        <div class="container">
-            <div class="text-center mb-5">
+        <div class="container article-metadata pb-4 pt-2">
+            <h3 class="article-title">{{ dataset.title }}</h3>
+            <p class="article-description">{{ dataset.description }}</p>
+        </div>
+        <div class="container article-metadata pb-2 pt-3">
+            <p class="article-description"><b>Częstotliwość aktualizacji:</b> co {{ dataset.frequency}} dni</p>
+        </div>
+        <div class="container article-metadata">
+            <div class="text-front mb-4 pt-3">
                 <h3>Zasoby</h3>
             </div>
-            {% for resource in dataset.resources.all %}
-                <div class="card mb-3">
-                    <div class="card-body">
+            {% for resource in resources %}
+                <div class="card border-secondary mb-4">
+                    <div class="card-body pb-2">
                         <div class="d-flex flex-column flex-lg-row">
-                            <span class="avatar avatar-text rounded-3 me-4 bg-warning mb-2">BE</span>
+
                             <div class="row flex-fill">
-                                <div class="col-sm-5">
+                                <span class="d-inline-flex align-items-center justify-content-center text-white rounded m-1 me-3 ms-4" style="background-color: #0082ca; width: 40px; height: 40px;">
+                                    <i class="fas fa-file-csv fa-lg"></i>
+                                </span>
+                                <div class="col-lg-8 col-md-5 col-sm-4 col-xs-2 me-auto">
                                     <h4 class="h5">{{resource.title}}</h4>
-                                    <span class="badge bg-secondary">US</span> <span
-                                        class="badge bg-success">$90K - $180K</span>
+                                    <p class="article-description">{{ resource.description }}</p>
                                 </div>
-                                <div class="col-sm-4 py-2">
-                                    {% for tag in dataset.tags.all %}
-                                    <span class="badge bg-secondary">{{tag}}</span>
-                                    {% endfor %}
-                                </div>
-                                <div class="col-sm-3 text-lg-end pt-2">
-                                    <a href="{% url 'resource-detail' resource.id %}" class="btn btn-primary stretched-link">Podgląd</a>
+                                <div class="col-lg-2 col-md-4 col-sm-3 col-xs-2 text-lg pt-2 align-items-right">
+                                    <a href="{% url 'resource-detail' resource.id %}" class="btn btn-custom stretched-link">Podgląd</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             {% endfor %}
-
+            <div class="text-lg-end pt-2">
+                    <a href="{% url 'resource-create' dataset.id %}" class="btn btn-custom w-100 mb-3">Dodaj</a>
+            </div>
         </div>
+        <div class="container article-metadata pb-3 pt-3">
+            <div class="text-front mb-2">
+                <h3>Kategorie</h3>
+            </div>
+            {% for category in dataset.categories.all %}
+                <span class="text-custom fs-4">{{category}}</span>
+            {% endfor %}
+        </div>
+        <div class="container article-metadata pb-3 pt-3">
+            <div class="text-front mb-3">
+                <h3>Tagi</h3>
+            </div>
+            {% for tag in dataset.tags.all %}
+                <span class="badge bg-custom me-2">{{tag}}</span>
+            {% endfor %}
+        </div>
+
     </div>
 </article>
 {% endblock content %}

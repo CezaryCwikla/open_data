@@ -11,8 +11,7 @@ class DatasetCreationForm(forms.ModelForm):
                   'availability',
                   'tags',
                   'organisation',
-                  'categories',
-                  'resources']
+                  'categories']
 
 
     # def __init__(self, *args, **kwargs):
