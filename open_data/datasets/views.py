@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import DatasetCreationForm
+from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, TrigramSimilarity
 
 
 # def home(request):
@@ -22,11 +23,32 @@ class DatasetsListView(ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        keywords = self.request.GET.get('q')
+        if keywords:
+            # title_vector = SearchVector('title', weight='A')
+            # content_vector = SearchVector('description', weight='B')
+            # vectors = title_vector + content_vector
+            qs = Dataset.objects.annotate(similarity=TrigramSimilarity('title', keywords),
+                ).filter(similarity__gt=0.3).order_by('-similarity')
+            print(qs)
+
+        else:
+            qs = super().get_queryset()
         if self.request.user.is_authenticated:
             return qs
         else:
             return qs.filter(availability='Publiczne')
+
+
+def product_search(request):
+    q = request.GET.get('q') if request.GET.get('q') != None else ''
+    datasets = Dataset.objects.filter(
+        search=SearchQuery(q))
+    print(datasets)
+    context = {
+        "datasets": datasets
+    }
+    return render(request, "datasets/dataset_list.html", context)
 
 
 class DatasetsCreateView(LoginRequiredMixin, CreateView):
@@ -85,8 +107,6 @@ class DatasetsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == dataset.author or self.request.user.is_superuser:
             return True
         return False
-
-
 
 #
 # def create_dataset(request):
