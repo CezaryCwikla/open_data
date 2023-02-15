@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.DatasetsListView.as_view(), name='datasets-home'),
-    path('search/', views.product_search, name='datasets-search'),
     path('new/', views.DatasetsCreateView.as_view(), name='datasets-create'),
     path('<int:pk>/', views.DatasetsDetailView.as_view(), name='datasets-detail'),
     path('<int:pk>/update/', views.DatasetsUpdateView.as_view(), name='datasets-update'),

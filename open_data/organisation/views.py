@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import OrganisationCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
+from datasets.models import Dataset
 
 # def home(request):
 #     context = {
@@ -28,7 +28,8 @@ class OrganisationCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
               'address',
               'email',
               'categories',
-              'users']
+              'users',
+              'image']
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -37,6 +38,10 @@ class OrganisationCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
 class OrganisationDetailView(DetailView):
     model = Organisation
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['datasets'] = Dataset.objects.filter(organisation=self.object.id)
+        return context
 
 class OrganisationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Organisation
@@ -46,7 +51,8 @@ class OrganisationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView
               'address',
               'email',
               'categories',
-              'users']
+              'users',
+              'image']
 
     def form_valid(self, form):
         form.instance.author = self.request.user

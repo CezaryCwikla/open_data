@@ -1,21 +1,126 @@
 {% extends "datasets/base.html" %}
 {% block content %}
-    <article class="media content-section">
-        <div class="media-left">
-            <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
-        </div>
-        <div class="media-body">
-            <div class="article-metadata">
-                <a class="mr-2" href="#">{{ organisation.author }}</a>
-                {% if user or user.is_superuser %}
+<div class="d-flex pb-5">
+        <article class="media content-section mt-5">
+
+            <div class="media-body ">
+                {% if user.is_superuser %}
+                <div class="container article-metadata pb-2 pt-2">
+
                     <div>
-                        <a class="btn btn-secondary btn-sm my-1 " href="{% url 'organisation-update' organisation.id %}"> Aktualizuj organizację</a>
-                        <a class="btn btn-danger btn-sm my-1 " href="{% url 'organisation-delete' organisation.id %}"> Usuń organizację</a>
+                        <a class="btn btn-secondary btn-sm my-1 " href="{% url 'organisation-update' organisation.id %}">
+                            Aktualizuj organizację</a>
+                        <a class="btn btn-danger btn-sm my-1 float-end "
+                           href="{% url 'organisation-delete' organisation.id %}"> Usuń organizację</a>
                     </div>
+
+                </div>
+                {% endif %}
+                <div class="media-left">
+                    <img class="rounded-circle account-img" src="{{ organisation.image.url }}">
+                </div>
+                <h3 class="article-title"> {{ organisation.title }}</h3>
+                <p class="">{{ organisation.description }}</p>
+                <p class="">{{ organisation.phone }}</p>
+                <p class="">{{ organisation.address }}</p>
+                <p class="">{{ organisation.email }}</p>
+            </div>
+            {% if user.is_superuser %}
+            <div class="container article-metadata">
+                <div class="text-front mb-4 pt-3">
+                    <h3>Użytkownicy</h3>
+                </div>
+                {% for users in organisation.users.all %}
+                <div class="card border-secondary mb-4">
+                    <div class="card-body pb-2">
+                        <div class="d-flex flex-column flex-lg-row">
+
+                            <div class="row flex-fill">
+                                        <span class="d-inline-flex align-items-center justify-content-center text-white rounded mb-2 me-3 ms-4"
+                                              style="background-color: #0082ca; width: 40px; height: 40px;">
+                                            <i class="fas fa-user fa-lg"></i>
+                                        </span>
+                                <div class="col-lg-8 col-md-5 col-sm-4 col-xs-2 me-auto mt-2">
+                                    <h4 class="h5">{{users.username}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="text-lg-end pt-2">
+                    <a href="{% url 'organisation-update' organisation.id %}" class="btn btn-custom w-100 mb-3">Dodaj</a>
+                </div>
+            </div>
+            {% endif %}
+        </article>
+    <div class="flex-fill">
+        <div class="container">
+            <div class="text-center m-5">
+                <h3>Zbiory danych</h3>
+            </div>
+            <div class="search_form mb-4">
+                <form class="search" method="GET" action="{% url 'datasets-home' %}">
+                    <label>
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                             viewBox="0 0 32 32">
+                            <path
+                                    d="M32 30.586l-10.845-10.845c1.771-2.092 2.845-4.791 2.845-7.741
+                          0-6.617-5.383-12-12-12s-12 5.383-12 12c0 6.617 5.383 12
+                          12 12 2.949 0 5.649-1.074 7.741-2.845l10.845 10.845
+                          1.414-1.414zM12 22c-5.514 0-10-4.486-10-10s4.486-10
+                          10-10c5.514 0 10 4.486 10 10s-4.486 10-10 10z"></path>
+                        </svg>
+                        <input name="q" placeholder="Search"/>
+                    </label>
+                </form>
+            </div>
+            {% for dataset in datasets %}
+            <div class="list-group">
+                <a href="{% url 'datasets-detail' dataset.id %}"
+                   class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <div class="d-flex flex-column flex-lg-row">
+                                <i class="me-4 mb-2 mt-3 fas fa-lg fa-database"></i>
+                                <div class="col-sm-5">
+                                    <h4 class="h5">{{ dataset.title }}</h4>
+                                    <h5 class="h6">{{ dataset.description }}</h5>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </a>
+            </div>
+            {% endfor %}
+            <div class="mt-3">
+                {% if is_paginated %}
+
+                {% if page_obj.has_previous %}
+                <a class="btn btn-outline-info mb-4" href="?page=1">Pierwsza</a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}"> Poprzednia </a>
+
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}"> Następna </a>
+                <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}"> Ostatnia </a>
+                {% endif %}
+
                 {% endif %}
             </div>
-            <h2 class="article-title">{{ organisation.title }}</h2>
-            <p class="article-content">{{ organisation.description }}</p>
         </div>
-    </article>
+
+    </div>
+</div>
 {% endblock content %}

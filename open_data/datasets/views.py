@@ -40,17 +40,6 @@ class DatasetsListView(ListView):
             return qs.filter(availability='Publiczne')
 
 
-def product_search(request):
-    q = request.GET.get('q') if request.GET.get('q') != None else ''
-    datasets = Dataset.objects.filter(
-        search=SearchQuery(q))
-    print(datasets)
-    context = {
-        "datasets": datasets
-    }
-    return render(request, "datasets/dataset_list.html", context)
-
-
 class DatasetsCreateView(LoginRequiredMixin, CreateView):
     model = Dataset
     fields = ['title',
