@@ -1,13 +1,12 @@
 {% extends "datasets/base.html" %}
 {% block content %}
+<ul class="list-group ">
     {% for org in organisations %}
-        <article class="media content-section">
-            <div class="media-left">
-                <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
-            </div>
-            <div class="media-body">
-                <h2><a class="article-title" href="{% url 'organisation-detail' org.id %}">{{ org.title }}</a></h2>
-            </div>
-        </article>
+          <a href="{% url 'organisation-detail' org.id %}" class="list-group-item list-group-item-action hover-overlay hover-zoom hover-shadow ripple" aria-current="true">
+              {{ org.title }}
+              <span class="badge bg-primary badge-pill float-end"> {{datasets}} </span>
+          </a>
     {% endfor %}
+</ul>
+
 {% endblock content %}

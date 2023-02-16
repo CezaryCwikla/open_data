@@ -19,6 +19,13 @@ class OrganisationListView(ListView):
     context_object_name = 'organisations'
     ordering = ['title']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for i in self.object_list:
+            i['num_of_organisations'] = 1
+        return context
+        #todo !!!!!!!!!!!!!
+
 
 class OrganisationCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Organisation
@@ -41,7 +48,9 @@ class OrganisationDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['datasets'] = Dataset.objects.filter(organisation=self.object.id)
+        context['datasets_len'] = len(Dataset.objects.filter(organisation=self.object.id))
         return context
+
 
 class OrganisationUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Organisation

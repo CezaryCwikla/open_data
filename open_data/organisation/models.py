@@ -15,7 +15,6 @@ class Organisation(models.Model):
     users = models.ManyToManyField(User)
     image = models.ImageField(default='herb Rzeszowa.jpg', upload_to='profile_pics')
 
-
     def __str__(self):
         return self.title
 
