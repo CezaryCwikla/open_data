@@ -25,15 +25,17 @@
         <header class="site-header">
             <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
                 <div class="container">
-                    <a class="navbar-brand mr-4" href="{% url 'datasets-home' %}">Otwarte Dane</a>
+                    <a class="navbar-brand mr-4" href="{% url 'search-home' %}">Otwarte Dane</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
                             aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarToggle">
                         <div class="navbar-nav me-auto">
-                            <a class="nav-item nav-link" href="{% url 'datasets-home' %}">Strona główna</a>
                             <a class="nav-item nav-link" href="{% url 'about' %}">O mieście</a>
+                            <a class="nav-item nav-link" href="{% url 'organisation-home' %}">Organizacje</a>
+                            <a class="nav-item nav-link" href="{% url 'category-home' %}">Kategorie</a>
+                            <a class="nav-item nav-link" href="{% url 'datasets-home' %}">Zbiory</a>
                         </div>
                         <!-- Navbar Right Side -->
                         <div class="navbar-nav">
@@ -42,9 +44,6 @@
                                 <a class="nav-item nav-link" href="{% url 'category-create' %}">Nowa Kategoria</a>
                                 <a class="nav-item nav-link" href="{% url 'datasets-create' %}">Nowy Zbiór</a>
                             {% elif user.is_authenticated %}
-                                <a class="nav-item nav-link" href="{% url 'organisation-create' %}">Nowa Organizacja</a>
-                                <a class="nav-item nav-link" href="{% url 'category-create' %}">Nowa Kategoria</a>
-                                <a class="nav-item nav-link" href="{% url 'datasets-create' %}">Nowy Zbiór</a>
                                 <a class="nav-item nav-link" href="{% url 'profile' %}">Profil</a>
                                 <a class="nav-item nav-link" href="{% url 'logout' %}">Wyloguj się</a>
                             {% else %}

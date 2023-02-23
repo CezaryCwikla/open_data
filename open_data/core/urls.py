@@ -4,5 +4,5 @@ from datasets.views import DatasetsListView
 
 urlpatterns = [
     path('about/', views.about, name='about'),
-    path('', views.home_search, name='home-search')
+    path('', views.home_search, name='search-home')
 ]
