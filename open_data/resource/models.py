@@ -19,7 +19,7 @@ class Resource(models.Model):
     title = models.CharField(max_length=80, unique=True)
     description = models.CharField(max_length=200)
     date_posted = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True) #todo test SET NULL CZY DZIALA
+    author = models.ForeignKey(User, on_delete=models.PROTECT, null=True) #todo test SET NULL CZY DZIALA
     availability = models.CharField(max_length=20, choices=choices, default='Prywatne')
     file = models.FileField(upload_to='resources/', null=True)
     dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE, null=True)

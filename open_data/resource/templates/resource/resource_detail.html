@@ -20,6 +20,7 @@
             </div>
             <h2 class="article-title">{{ resource.title }}</h2>
             <p class="article-content">{{ resource.description }}</p>
+            <a href="{{resource.file.url}}" download class="btn btn-info mx-4" >Download</a>
         </div>
     </article>
 {% endblock content %}

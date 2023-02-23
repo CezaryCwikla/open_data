@@ -19,12 +19,18 @@ class OrganisationListView(ListView):
     context_object_name = 'organisations'
     ordering = ['title']
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        for i in self.object_list:
-            i['num_of_organisations'] = 1
-        return context
-        #todo !!!!!!!!!!!!!
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #
+    #     # context['num'] = Organisation.objects.all().get('phone').sum()/len(Organisation.objects.all())
+    #     # print(context['num'])
+    #     sum = 0
+    #     for i in Organisation.objects.all():
+    #         sum += i.phone
+    #     avg = sum/len(Organisation.objects.all())
+    #     print(avg)
+    #     return context
+    #     # #todo !!!!!!!!!!!!!
 
 
 class OrganisationCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

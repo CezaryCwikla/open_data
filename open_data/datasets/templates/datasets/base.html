@@ -37,7 +37,11 @@
                         </div>
                         <!-- Navbar Right Side -->
                         <div class="navbar-nav">
-                            {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                                <a class="nav-item nav-link" href="{% url 'organisation-create' %}">Nowa Organizacja</a>
+                                <a class="nav-item nav-link" href="{% url 'category-create' %}">Nowa Kategoria</a>
+                                <a class="nav-item nav-link" href="{% url 'datasets-create' %}">Nowy Zbiór</a>
+                            {% elif user.is_authenticated %}
                                 <a class="nav-item nav-link" href="{% url 'organisation-create' %}">Nowa Organizacja</a>
                                 <a class="nav-item nav-link" href="{% url 'category-create' %}">Nowa Kategoria</a>
                                 <a class="nav-item nav-link" href="{% url 'datasets-create' %}">Nowy Zbiór</a>
