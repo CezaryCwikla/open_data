@@ -1,19 +1,72 @@
 {% extends "datasets/base.html" %}
 {% block content %}
-    <article class="media content-section">
-        <div class="media-left">
-            <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
-        </div>
-        <div class="media-body">
-            <div class="article-metadata">
-                <h2 class="article-title">{{ category.title }}</h2>
-                {% if user or user.is_superuser %}
+<div class="d-flex pb-5">
+        <article class="media content-section mt-5">
+
+            <div class="media-body ">
+                {% if user.is_superuser %}
+                <div class="container article-metadata pb-2 pt-2">
+
                     <div>
-                        <a class="btn btn-secondary btn-sm my-1 " href="{% url 'category-update' category.id %}"> Aktualizuj kategorię</a>
-                        <a class="btn btn-danger btn-sm my-1 " href="{% url 'category-delete' category.id %}"> Usuń kategorię</a>
+                        <a class="btn btn-secondary btn-sm my-1 " href="{% url 'category-update' category.id %}">
+                            Aktualizuj organizację</a>
+                        <a class="btn btn-danger btn-sm my-1 float-end "
+                           href="{% url 'category-delete' category.id %}"> Usuń organizację</a>
                     </div>
+
+                </div>
                 {% endif %}
+                <div class="media-left">
+                    <img class="account-img" src="{{ category.file.url }}">
+                </div>
+                <h3 class="article-title"> {{ category.title }}</h3>
+                <p class="">Liczba zbiorów: {{ datasets_len }}</p>
             </div>
+        </article>
+    <div class="flex-fill">
+        <div class="container">
+            <div class="text-center m-5">
+                <h3>Zbiory danych</h3>
+            </div>
+            <div class="search_form mb-4">
+                <form class="search" method="GET" action="{% url 'datasets-home' %}">
+                    <label>
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                             viewBox="0 0 32 32">
+                            <path
+                                    d="M32 30.586l-10.845-10.845c1.771-2.092 2.845-4.791 2.845-7.741
+                          0-6.617-5.383-12-12-12s-12 5.383-12 12c0 6.617 5.383 12
+                          12 12 2.949 0 5.649-1.074 7.741-2.845l10.845 10.845
+                          1.414-1.414zM12 22c-5.514 0-10-4.486-10-10s4.486-10
+                          10-10c5.514 0 10 4.486 10 10s-4.486 10-10 10z"></path>
+                        </svg>
+                        <input name="q" placeholder="Search"/>
+                    </label>
+                </form>
+            </div>
+            {% for dataset in datasets %}
+            <div class="list-group">
+                <a href="{% url 'datasets-detail' dataset.id %}"
+                   class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <div class="d-flex flex-column flex-lg-row">
+                                <i class="me-4 mb-2 mt-3 fas fa-lg fa-database"></i>
+                                <div class="col-sm-5">
+                                    <h4 class="h5">{{ dataset.title }}</h4>
+                                    <h5 class="h6">{{ dataset.description }}</h5>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </a>
+            </div>
+            {% endfor %}
+            {% include 'datasets/pagination.html' %}
         </div>
-    </article>
+
+    </div>
+</div>
 {% endblock content %}

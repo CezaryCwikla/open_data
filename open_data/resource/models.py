@@ -4,8 +4,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from datasets.models import Dataset
 
-
-
 choices = [('Prywatne', 'Prywatne'),
            ('Publiczne', 'Publiczne')]
 

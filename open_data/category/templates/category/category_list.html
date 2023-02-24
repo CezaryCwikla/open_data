@@ -1,13 +1,19 @@
 {% extends "datasets/base.html" %}
 {% block content %}
-    {% for category in categories %}
-        <article class="media content-section">
-            <div class="media-left">
-                <img class="rounded-circle article-img media-object" src="{{ wniosek.author.profile.image.url }}" alt="">
-            </div>
-            <div class="media-body">
-                <h2><a class="article-title" href="{% url 'category-detail' category.id %}">{{ category.title }}</a></h2>
-            </div>
-        </article>
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+            {% for category in categories %}
+                    <div class="col-4">
+                        <div class="card my-3">
+                          <img class="card-img-top mx-auto" tabindex="-1" src="{{category.file.url}}" alt="">
+                          <div class="card-body mx-auto">
+                                <h2>{{ category.title }}</h2>
+                                <a class="card-text stretched-link" href="{% url 'category-detail' category.id %}"></a>
+                          </div>
+                        </div>
+                    </div>
+
+            {% endfor %}
+        </div>
+    </div>
 {% endblock content %}

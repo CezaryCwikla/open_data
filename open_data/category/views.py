@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import CategoryCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
+from datasets.models import Dataset
+from django.views.generic.list import MultipleObjectMixin
 
 class CategoryListView(ListView):
     model = Category
@@ -16,19 +17,27 @@ class CategoryListView(ListView):
 
 class CategoryCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Category
-    fields = ['title']
+    fields = ['title', 'file']
 
     def test_func(self):
         return self.request.user.is_superuser
 
 
-class CategoryDetailView(DetailView):
+class CategoryDetailView(DetailView, MultipleObjectMixin):
     model = Category
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        object_list = Dataset.objects.filter(categories=self.object.id)
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['datasets'] = context['object_list']
+        context['datasets_len'] = len(Dataset.objects.filter(categories=self.object.id))
+        return context
 
 
 class CategoryUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Category
-    fields = ['title']
+    fields = ['title', 'file']
 
     def form_valid(self, form):
         form.instance.author = self.request.user

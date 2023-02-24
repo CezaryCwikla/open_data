@@ -6,6 +6,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .forms import OrganisationCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from datasets.models import Dataset
+from django.views.generic.list import MultipleObjectMixin
 
 # def home(request):
 #     context = {
@@ -48,12 +49,14 @@ class OrganisationCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView
         return self.request.user.is_superuser
 
 
-class OrganisationDetailView(DetailView):
+class OrganisationDetailView(DetailView, MultipleObjectMixin):
     model = Organisation
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['datasets'] = Dataset.objects.filter(organisation=self.object.id)
+        object_list = Dataset.objects.filter(organisation=self.object.id)
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['datasets'] = context['object_list']
         context['datasets_len'] = len(Dataset.objects.filter(organisation=self.object.id))
         return context
 
@@ -88,7 +91,6 @@ class OrganisationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView
             return True
         return False
 
-# #todo przerobic create_views wszedzie
 # def create_organisation(request):
 #
 #     if request.method == 'POST':  # If the form has been submitted...
