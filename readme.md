@@ -1,3 +1,4 @@
+Platforma Open Data napisana z wykorzystaniem:
 - Docker - Web Framework
 - Redis - Cache
 - Postgresql - DB
