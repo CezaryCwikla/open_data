@@ -1,5 +1,4 @@
-/static/admin/
-/media/.
+media/
 .env
 
 ### Python template
