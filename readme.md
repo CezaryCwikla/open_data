@@ -1,4 +1,4 @@
-Platforma Open Data napisana z wykorzystaniem:
+Platforma Open Data w trakcie tworzenia z wykorzystaniem:
 - Docker - Web Framework
 - Redis - Cache
 - Postgresql - DB
