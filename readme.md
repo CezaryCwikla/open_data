@@ -1,5 +1,5 @@
 Platforma Open Data w trakcie tworzenia z wykorzystaniem:
-- Docker - Web Framework
+- Django - Web Framework
 - Redis - Cache
 - Postgresql - DB
 - Docker + Docker-Compose - Containerization
